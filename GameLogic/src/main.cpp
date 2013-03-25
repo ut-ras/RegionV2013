@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <math.h>
 #include "inc/navigation.h"
 #include <comm/board.h>  
 #define ERR_A 5
@@ -11,42 +12,44 @@
 //************************************************************
 int main(void) {
     int i;
+    char r_speed=100;
+    char l_speed=100;
     Vector ERR_V (1,0.08727);   // 5 degree error (in radians), mag error of +/- 1
     // InitCall();   // 8======D
     for(i=0; i < 6; i++) {   // number of disks, increment i when disk picked up
-        PTAM PTAMdata = getPTAM();
+        Vector PTAMloc = ptam_location();
       }
-        Vector vRobot = PTAMdata.getRobotVector();
-        Vector vDisk = getDiskVector();
+        Vector vRobot = PTAMdata;
+        Vector vDisk = getDiskVector(i);
         while((vRobot <= (vDisk + ERR_V)) ||(vRobot >= (vDisk - ERR_V))) {
-            PTAM PTAMdata = getPTAM();
-            Vector vHeading = PTAMdata.getHeading();         // Vector Class definitions in location.h
-            vRobot = PTAMdata.getRobotVector();
+            Vector PTAMhead = ptam_heading();
+            Vector PTAMloc = ptam_location();
+            Vector vHeading = PTAMhead;         // Vector Class definitions in location.h
+            vRobot = PTAMloc;
             Vector vDesired = (vRobot - vDisk); 
-            vDisk = getDiskVector();
             double angleDiff = vHeading.getAngle() -  vDesired.getAngle();
             while((angleDiff >= ERR_A) || (angleDiff <= -ERR_A)) {
                 angleDiff = vHeading.getAngle() - vDesired.getAngle(); 
                 if(angleDiff < 0) {
                     // turn right using PID
-                    char speed = kp*angleDiff;  //kp = PID const must be char for comm
+                    char speed = kp*abs(angleDiff);  //kp = PID const must be char for comm
                     board.write(MOTOR_RIGHT,&speed,1);
                     // Send Right motor controls to RAS board
                 } else if(angleDiff > 0) {
                     // turn left using PID
-                    char speed = kp*angleDiff;  //kp = PID const must be char for comm
+                    char speed = kp*abs(angleDiff);  //kp = PID const must be char for comm
                     board.write(MOTOR_LEFT,&speed,1);
                     // Send left motor controls to RAS board
                 }
             } 
             // Check Map for obstacles, if flag returned stating there is an obstacle
             while(!obstacle) {
-                drive();
+                board.write(MOTOR_RIGHT, &r_speed,1);
+                board.write(MOTOR_LEFT, &l_speed,1);
             } 
             avoidObs();
         }
         diskPickUp();
-        vDisk = getDiskVector(i);
     }
     returnhome();
 }
