@@ -1,0 +1,60 @@
+#!/usr/bin/python
+
+import re, argparse, sys
+
+filename = "/proc/acpi/battery/BAT1/state"
+max_cap = 3448 # grabbed this myself from /proc/acpi/battery/BAT1/info
+
+class Batt:
+    def __init__(self):
+        self.update()
+
+    def update(self):
+         with open(filename) as file:
+            data = file.read()
+
+            self.present = (re.findall('present:\s*(.*)', data)[0] == 'yes')
+
+            if self.present:
+                self.charging = (re.findall('charging state:\s*(.*)', data) != 'discharging')
+                self.rate = int(re.findall('present rate:\s*(.*) mA', data)[0])
+                self.capacity = int(re.findall('remaining capacity:\s*(.*) mAh', data)[0])
+                self.voltage = int(re.findall('present voltage:\s*(.*) mV', data)[0])
+                self.percent = (100*self.capacity) / max_cap
+            else:
+                self.charging = False
+                self.rate = 0
+                self.capacity = 0
+                self.voltage = 0
+                self.percent = 0
+            
+
+    def __str__(self):
+        return "present:\t%s\n" % self.present   \
+             + "charging:\t%s\n" % self.charging \
+             + "rate:\t\t%s\n" % self.rate       \
+             + "capacity:\t%s\n" % self.capacity \
+             + "voltage:\t%s\n" % self.voltage   \
+             + "percent:\t%s\n" % self.percent
+
+
+def main():
+    parser = argparse.ArgumentParser(description="get battery status")
+    parser.add_argument('-p', '--prompt', help="prompt format", action="store_true")
+
+    args = parser.parse_args()
+
+    batt = Batt()
+
+    if args.prompt:
+        if batt.present:
+            sys.stdout.write('\033[3%dm[%s' % ((2,'+') if batt.charging else (1,'-')))
+            sys.stdout.write(str(batt.percent))
+            sys.stdout.write(']\033[0m')
+        else:
+            sys.stdout.write('[x]')
+    else:
+        sys.stdout.write(str(batt))
+
+if __name__ == "__main__":
+    main()
