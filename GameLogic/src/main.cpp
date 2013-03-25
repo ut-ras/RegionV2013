@@ -17,11 +17,11 @@ int main(void) {
         PTAM PTAMdata = getPTAM();
         Vector vRobot = getRobotVector(PTAMdata);
         Vector vDisk = getDiskVector();
-        while((vRobot <= addVector(vDisk,ERR_V)) ||(vRobot >= subVector(vDisk,ERR_V))) {
+        while((vRobot <= (vDisk+ERR_V)) ||(vRobot >= (vDisk-ERR_V))) {
             PTAM PTAMdata = getPTAM();
             Vector vHeading = getHeading(PTAMdata);         // Vector Class definitions in location.h
             vRobot = getRobotVector(PTAMdata);
-            Vector vDesired = subVector(vRobot,vDisk); 
+            Vector vDesired = (vRobot-vDisk); 
             vDisk = getDiskVector();
             double angleDiff = getAngle(vHeading) -  getAngle(vDesired);
             while((angleDiff >= ERR_A) || (angleDiff <= -ERR_A)) {
