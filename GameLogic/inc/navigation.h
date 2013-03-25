@@ -11,8 +11,8 @@ private:
     double mag;
     double angle;
 public:
-    double getMag(Vector x);
-    double getAngle(Vector x);
+    double getMag(void);
+    double getAngle(void);
     Vector (void) {mag = 0; angle = 0; }; 
     Vector (double inMag, double inAngle) { mag = inMag; angle = inAngle; }; 
     Vector subVectors(Vector* x, Vector y); 
@@ -29,6 +29,7 @@ private:
     double y;
     double rotation;
 public:
-    double getHeading(PTAM PTAMdata);
-    Vector getRobotVector(PTAM PTAMdata);     // Access x,y location of robot, return Vector Class
+    PTAM(void){ x = 0; y = 0; rotation = 0;};
+    Vector getHeading(void);
+    Vector getRobotVector(void);     // Access x,y location of robot, return Vector Class
 };
