@@ -58,11 +58,3 @@ Vector getRobotVector(PTAM PTAMdata) {
     vRobot.angle = atan(PTAMdata.y/PTAMdata.x);
     return vRobot;
 }
-
-Vector Vector::operator+(Vector x, Vector y){
-   return addVectors(x, y); 
-}
-
-Vector Vector::operator-(Vecotr x, Vector y){
-    return subVectors(x, y);
-}
