@@ -15,10 +15,12 @@ public:
     double getAngle(Vector x);
     Vector (void) {mag = 0; angle = 0; }; 
     Vector (double inMag, double inAngle) { mag = inMag; angle = inAngle; }; 
-    Vector subVectors(Vector x, Vector y);
-    Vector addVectors(Vector x, Vector y);
-    Vector operator+(Vector x, Vector y);
-    Vector operator-(Vector x, Vector y);
+    Vector subVectors(Vector* x, Vector y); 
+    Vector addVectors(Vector* x, Vector y);
+    Vector operator+(Vector x);
+    Vector operator-(Vector x);
+    bool operator<=(Vector x);
+    bool operator>=(Vector x);
 };
 
 class PTAM {
