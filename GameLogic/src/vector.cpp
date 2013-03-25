@@ -15,15 +15,16 @@
 #include "inc/navigation.h"
  
 PTAM getPTAM(void) {
-    
+    PTAM filler; 
+    return filler;        
 }
 
-double Vector::getMag(Vector x) {
-    return x.mag;
+double Vector::getMag(void) {
+    return this->mag;
 }
 
-double Vector::getAngle(Vector x) {
-    return x.angle;
+double Vector::getAngle(void) {
+    return this->angle;
 }
 
 Vector Vector::subVectors(Vector* x, Vector y){
@@ -49,7 +50,7 @@ Vector Vector::operator-(Vector x){
 }
 
 bool Vector::operator<=(Vector x){
-    if(this->mag <= x.mag){
+    if(this->mag <= x.mag){     // implicit parameter this, i.e., class Vector
         if(this->angle <= x.angle){
             return true;
         }
@@ -78,17 +79,17 @@ r() {
     // Pop next disk location off of stack retrieved from A-star
 }
 
-Vector getHeading(PTAM x) {
+Vector PTAM::getHeading(void) {
     Vector result;
     result.mag = 0;
-    result.angle = x.rotation;
-    return result
+    result.angle = this->rotation;  // implicit parameter this, i.e., class PTAM
+    return result;
 }
 
-Vector getRobotVector(PTAM PTAMdata) {
+Vector PTAM::getRobotVector(void) {
     Vector vRobot;
-    double magsquared = (PTAMdata.x)*(PTAMdata.x) + (PTAMdata.y)*(PTAMdata.y);
+    double magsquared = (this->x)*(this->x) + (this->y)*(this->y); // implicit parameter this, i.e., class PTAM
     vRobot.mag = sqrt(magsquared);
-    vRobot.angle = atan(PTAMdata.y/PTAMdata.x);
+    vRobot.angle = atan(this->y/this->x);
     return vRobot;
 }
