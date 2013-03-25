@@ -21,15 +21,9 @@ public:
     Vector operator-(Vector x);
     bool operator<=(Vector x);
     bool operator>=(Vector x);
+    void operator=(Vector x);
 };
 
-class PTAM {
-private:
-    double x;
-    double y;
-    double rotation;
-public:
-    PTAM(void){ x = 0; y = 0; rotation = 0;};
-    Vector getHeading(void);
-    Vector getRobotVector(void);     // Access x,y location of robot, return Vector Class
-};
+
+Vector ptam_heading(void);
+Vector ptam_location(void);
