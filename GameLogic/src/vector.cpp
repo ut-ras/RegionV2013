@@ -26,21 +26,55 @@ double Vector::getAngle(Vector x) {
     return x.angle;
 }
 
-Vector Vector::subVectors(Vector x, Vector y) {
+Vector Vector::subVectors(Vector* x, Vector y){
     Vector vResult;
-    vResult.mag = x.mag - y.mag;
-    vResult.angle = x.angle - y.angle;
+    vResult.mag = x->mag - y.mag;
+    vResult.angle = x->angle - y.angle;
     return vResult;
 }
 
-Vector Vector::addVectors(Vector x, Vector y) {
-    Vector vResult;
-    vResult.mag = x.mag + y.mag;
-    vResult.angle = x.angle + y.angle;
+Vector Vector::addVectors(Vector* x, Vector y){
+    Vector vResult; 
+    vResult.mag = x->mag + y.mag;
+    vResult.angle = x->angle + y.angle;
     return vResult;
 }
 
-Vector getDiskVector() {
+Vector Vector::operator+(Vector x){
+    return addVectors(this, x);
+}
+
+Vector Vector::operator-(Vector x){
+    return subVectors(this, x);
+}
+
+bool Vector::operator<=(Vector x){
+    if(this->mag <= x.mag){
+        if(this->angle <= x.angle){
+            return true;
+        }
+    }else{
+        return false;
+    }
+}
+
+bool Vector::operator>=(Vector x){
+    if(this->mag >= x.mag){
+        if(this->angle >= x.angle){
+            return true;
+        }
+    }else{
+        return false;
+    }
+}
+
+Vector getDiskVectoVector Vector::subVectors(Vector* x, Vector y){
+    Vector vResult;
+    vResult.mag = x->mag - y.mag;
+    vResult.angle = x->angle - y.mag;
+    return vResult;
+}
+r() {
     // Pop next disk location off of stack retrieved from A-star
 }
 
