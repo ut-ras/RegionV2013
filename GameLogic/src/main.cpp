@@ -15,17 +15,18 @@ int main(void) {
     // InitCall();   // 8======D
     for(i=0; i < 6; i++) {   // number of disks, increment i when disk picked up
         PTAM PTAMdata = getPTAM();
-        Vector vRobot = getRobotVector(PTAMdata);
+      }
+        Vector vRobot = PTAMdata.getRobotVector();
         Vector vDisk = getDiskVector();
-        while((vRobot <= (vDisk+ERR_V)) ||(vRobot >= (vDisk-ERR_V))) {
+        while((vRobot <= (vDisk + ERR_V)) ||(vRobot >= (vDisk - ERR_V))) {
             PTAM PTAMdata = getPTAM();
-            Vector vHeading = getHeading(PTAMdata);         // Vector Class definitions in location.h
-            vRobot = getRobotVector(PTAMdata);
-            Vector vDesired = (vRobot-vDisk); 
+            Vector vHeading = PTAMdata.getHeading();         // Vector Class definitions in location.h
+            vRobot = PTAMdata.getRobotVector();
+            Vector vDesired = (vRobot - vDisk); 
             vDisk = getDiskVector();
-            double angleDiff = getAngle(vHeading) -  getAngle(vDesired);
+            double angleDiff = vHeading.getAngle() -  vDesired.getAngle();
             while((angleDiff >= ERR_A) || (angleDiff <= -ERR_A)) {
-                angleDiff = getAngle(vHeading) - getAngle(vDesired); 
+                angleDiff = vHeading.getAngle() - vDesired.getAngle(); 
                 if(angleDiff < 0) {
                     // turn right using PID
                     char speed = kp*angleDiff;  //kp = PID const must be char for comm
@@ -45,7 +46,7 @@ int main(void) {
             avoidObs();
         }
         diskPickUp();
-        vDisk = GetDiskVector(i);
+        vDisk = getDiskVector(i);
     }
     returnhome();
 }
