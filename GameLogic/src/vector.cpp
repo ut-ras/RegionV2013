@@ -13,11 +13,28 @@
 #include <stdint.h>
 #include <math.h>
 #include "inc/navigation.h"
+
+#include <comm/ptam.h>
+
+static comm::master comm("ptam");
  
-PTAM getPTAM(void) {
-    PTAM filler; 
-    return filler;        
+Vector ptam_heading(void) {
+    double data[3];
+    comm.read('p', data, sizeof(data));
+
+    return Vector(1.0, data[2]);
 }
+
+Vector ptam_location(void) {
+    double data[3];
+    comm.read('p', data, sizeof(data));
+
+    return Vector(
+        sqrt(data[0]*data[0] + data[1]*data[1])
+        atan2(data[1], data[0])
+    );
+}
+
 
 double Vector::getMag(void) {
     return this->mag;
@@ -69,27 +86,16 @@ bool Vector::operator>=(Vector x){
     }
 }
 
-Vector getDiskVectoVector Vector::subVectors(Vector* x, Vector y){
-    Vector vResult;
-    vResult.mag = x->mag - y.mag;
-    vResult.angle = x->angle - y.mag;
-    return vResult;
+void Vector::operator=(Vector x){
+    this->mag = x.mag;
+    this->angle = x.angle;
 }
+
+Vector getDiskVector(){
+    Vector filler;
+    return filler;
+} 
+
 r() {
     // Pop next disk location off of stack retrieved from A-star
-}
-
-Vector PTAM::getHeading(void) {
-    Vector result;
-    result.mag = 0;
-    result.angle = this->rotation;  // implicit parameter this, i.e., class PTAM
-    return result;
-}
-
-Vector PTAM::getRobotVector(void) {
-    Vector vRobot;
-    double magsquared = (this->x)*(this->x) + (this->y)*(this->y); // implicit parameter this, i.e., class PTAM
-    vRobot.mag = sqrt(magsquared);
-    vRobot.angle = atan(this->y/this->x);
-    return vRobot;
 }
