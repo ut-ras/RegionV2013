@@ -30,5 +30,5 @@ Vector ptam_location(void);
 Vector getDiskVector(int);
 void InitCall(void);
 void avoidObs(void);
-void diskPickUp(void);
+bool diskPickUp(void);
 
