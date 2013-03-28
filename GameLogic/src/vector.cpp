@@ -16,13 +16,17 @@
 
 #include <comm/ptam.h>
 
+#define x 0
+#define y 1
+#define rot 2
+
 static comm::master comm("ptam");
  
 Vector ptam_heading(void) {
     double data[3];
     comm.read('p', data, sizeof(data));
 
-    return Vector(1.0, data[2]);
+    return Vector(1.0, data[rot]);
 }
 
 Vector ptam_location(void) {
@@ -30,8 +34,8 @@ Vector ptam_location(void) {
     comm.read('p', data, sizeof(data));
 
     return Vector(
-        sqrt(data[0]*data[0] + data[1]*data[1])
-        atan2(data[1], data[0])
+        sqrt(data[x]*data[x] + data[y]*data[y])
+        atan2(data[y], data[x])
     );
 }
 
@@ -91,11 +95,9 @@ void Vector::operator=(Vector x){
     this->angle = x.angle;
 }
 
-Vector getDiskVector(){
+Vector getDiskVector(int i){
+    // Pop next disk location off of stack retrieved from A-star
     Vector filler;
     return filler;
 } 
 
-r() {
-    // Pop next disk location off of stack retrieved from A-star
-}
