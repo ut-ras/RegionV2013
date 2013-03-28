@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <math.h>
+#include <unistd.h>
 #include "inc/navigation.h"
 #include <comm/board.h>  
 #define ERR_A 5
-#define kp 1 
+#define kp 100       // P-constant 
+#define UDELAY 500
 
 //************************************************************
 //  More efficient plan (if time):                          //
@@ -12,20 +15,24 @@
 //************************************************************
 int main(void) {
     int i;
+    Vector vHome (8,0.78539816339);   // pi/4 radians, 8 inches in square(if 0 at corner). 
+                                      //If 0 at initial start, make len=0
     char r_speed=100;
     char l_speed=100;
+    Vector vDisk;
     Vector ERR_V (1,0.08727);   // 5 degree error (in radians), mag error of +/- 1
-    // InitCall();   // 8======D
-    for(i=0; i < 6; i++) {   // number of disks, increment i when disk picked up
-        Vector PTAMloc = ptam_location();
-      }
-        Vector vRobot = PTAMdata;
-        Vector vDisk = getDiskVector(i);
+    InitCall();   
+    for(i=0; i < 7; i++) {   // number of disks, increment i when disk picked up, when disk=6, return 
+        Vector vRobot = ptam_location();
+        if(i == 6) {
+            // Received all disks, pop home vector
+            vDisk = vHome;            
+        } else {
+            vDisk = getDiskVector(i);
+        }
         while((vRobot <= (vDisk + ERR_V)) ||(vRobot >= (vDisk - ERR_V))) {
-            Vector PTAMhead = ptam_heading();
-            Vector PTAMloc = ptam_location();
-            Vector vHeading = PTAMhead;         // Vector Class definitions in location.h
-            vRobot = PTAMloc;
+            Vector vRobot = ptam_location();
+            Vector vHeading = ptam_heading();         // Vector Class definitions in location.h
             Vector vDesired = (vRobot - vDisk); 
             double angleDiff = vHeading.getAngle() -  vDesired.getAngle();
             while((angleDiff >= ERR_A) || (angleDiff <= -ERR_A)) {
@@ -43,15 +50,17 @@ int main(void) {
                 }
             } 
             // Check Map for obstacles, if flag returned stating there is an obstacle
-            while(!obstacle) {
+            if(!obstacle) {
                 board.write(MOTOR_RIGHT, &r_speed,1);
                 board.write(MOTOR_LEFT, &l_speed,1);
+                usleep(UDELAY);
             } 
             avoidObs();
         }
-        diskPickUp();
+         if(!diskPickUp()) {
+            //crap
+        } 
     }
-    returnhome();
 }
 
 void InitCall() {
@@ -63,3 +72,6 @@ void InitCall() {
     comm::master board("board"); 
 }
 
+bool diskPickUp(void) {
+    
+}
