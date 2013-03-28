@@ -27,3 +27,8 @@ public:
 
 Vector ptam_heading(void);
 Vector ptam_location(void);
+Vector getDiskVector(void);
+void InitCall(void);
+void avoidObs(void);
+void diskPickUp(void);
+
