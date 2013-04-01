@@ -189,9 +189,15 @@ void slave::check(int ms) {
             // Communication
             } else {
                 char cmd;
+
                 if (read(*sit, &cmd, 1) != 1 || !handle(cmd, *sit)) {
-                    char resp = 'x';
-                    if (write(*sit, &resp, 1)); // ignore
+
+                    if (errno == EAGAIN) { // socket was closed
+                        channels.erase(sit);
+                    } else {
+                        char resp = 'x';
+                        if (write(*sit, &resp, 1)); // ignore
+                    }
                 }
             }
         }

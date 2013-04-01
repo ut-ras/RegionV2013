@@ -1,16 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-    <circle>
-        <x>100</x>
-        <y>100</y>
-    </circle>    
-    <line>
-        <x1>0</x1>
-        <y1>0</y1>
-        <x2>50</x2>
-        <y2>50</y2>
-    </line>
-    <rect>
-        <x>25</x>
-        <y>25</y>
-    </rect>
+<robotstart x="10" y="10"/>
 
+<bucket x="10" y="20"/>
+<bucket x="10" y="20"/>
+<bucket x="10" y="20"/>
+
+<block x="20" y="20"/>
+<block x="20" y="20"/>
+
+<dowel>
+    <start x="10" y="20"/>
+    <end x="20" z="30"/>
+</dowel>
+<dowel>
+    <start x="10" y="20"/>
+    <end x="20" z="30"/>
+</dowel>

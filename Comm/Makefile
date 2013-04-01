@@ -1,7 +1,7 @@
 CC=g++
 DEST=/usr/local
 LIB=libcomm.so
-CFLAGS=-O3 -Wall -I. -DCOMM_PATH=\"/home/spokebot/spokebot/Comm/comms\"
+CFLAGS=-O3 -Wall -Werror -I. -DCOMM_PATH=\"/home/spokebot/spokebot/Comm/comms\"
 
 OBJECTS=src/master.o \
         src/slave.o  \
@@ -25,6 +25,9 @@ driver: $(LIB) src/driver.o
 
 commtest: $(LIB) src/commtest.o
 	$(CC) $(CFLAGS) -L. src/commtest.o -lcomm -o $@
+
+setCam: $(LIB) src/camera.o
+	$(CC) $(CFLAGS) -L. src/camera.o -lcomm -o $@
 
 %.o: %.cpp
 	$(CC) -c $(CFLAGS) $< -o $@

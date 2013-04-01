@@ -9,6 +9,8 @@
 #define kp 100       // P-constant 
 #define UDELAY 500
 
+extern bool board_checkDisk();
+
 //************************************************************
 //  More efficient plan (if time):                          //
 //  --> PID line follow using position vectors              //
@@ -23,13 +25,15 @@ int main(void) {
     Vector ERR_V (1,0.08727);   // 5 degree error (in radians), mag error of +/- 1
     InitCall();   
     for(i=0; i < 7; i++) {   // number of disks, increment i when disk picked up, when disk=6, return 
-        Vector vRobot = ptam_location();
+        
+        /* Rather than the if-else statement, push the home vector onto the disk array */
+        /*Vector vRobot = ptam_location();
         if(i == 6) {
             // Received all disks, pop home vector
             vDisk = vHome;            
         } else {
             vDisk = getDiskVector(i);
-        }
+        }*/ 
         while((vRobot <= (vDisk + ERR_V)) ||(vRobot >= (vDisk - ERR_V))) {
             Vector vRobot = ptam_location();
             Vector vHeading = ptam_heading();         // Vector Class definitions in location.h
@@ -73,5 +77,7 @@ void InitCall() {
 }
 
 bool diskPickUp(void) {
-    
+    // Comm with RAS board, call pickup function
+    // c-function call from RASboard returns true or false
+    return (board_checkDisk());    
 }

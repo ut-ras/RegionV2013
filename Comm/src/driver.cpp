@@ -7,8 +7,15 @@
 #include <unistd.h>
 #include <signal.h>
 
-int main() {
-    comm::master comm("board_raw");
+int main(int argc, char **argv) {
+    comm::master comm("board");
+    unsigned char speed;
+
+    if (argc > 1)
+        speed = atoi(argv[1]) & 0xff;
+    else
+        speed = 120;
+
 
     if (!comm.ping()) {
         fprintf(stderr, "RAS Board not responding!\n");
@@ -24,9 +31,9 @@ int main() {
 
     if (system("stty raw")); // ignore
         
-    unsigned char left = 128;
-    unsigned char right = 128;
-    unsigned char crane = 0;
+    signed char left = 0;
+    signed char right = 0;
+    signed char crane = 0;
 
     while (1) {
         printf("\r[ %3d %3d | %3d] : ", left, right, crane);
@@ -36,24 +43,24 @@ int main() {
 
         switch (getc(stdin)) {
             case 'w':
-                left = 255;
-                right = 255;
+                left = speed;
+                right = speed;
                 break;
             case 'a':
-                left = 192;
-                right = 64;
-                break;
-            case 'd':
-                left = 64;
-                right = 192;
-                break;
-            case 's':
-                left = 0;
+                left = speed;
                 right = 0;
                 break;
+            case 'd':
+                left = 0;
+                right = speed;
+                break;
+            case 's':
+                left = -speed;
+                right = -speed;
+                break;
             case ' ':
-                left = 128;
-                right = 128;
+                left = 0;
+                right = 0;
                 break;
             case 'q':
                 crane = 0;

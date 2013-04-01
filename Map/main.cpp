@@ -1,15 +1,22 @@
-#include <cstdio>
-#include <libxml2/libxml/parser.h>
-#include <libxml2/libxml/tree.h>
+#include <cstdlib>
+#include <tinyxml2.h>
+
+#include "mapper.h"
+
+#include <comm/slave.h>
+
+
 
 int main() {
-    xmlDocPtr doc;
-    doc = xmlReadFile("map.xml", NULL, 0);
+
+    comm::slave comm("map");
     
-    printf("%s",doc->name);
-    
-    // Free things
-    xmlFreeDoc(doc);
-    xmlCleanupParser();
-    return 0; 
+    mapper test("map.xml", "Locatio.csv");
+
+
+
+    printf("\ninitialized\n\n");
+
+
+    comm.loop();
 }
