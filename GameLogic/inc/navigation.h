@@ -7,28 +7,40 @@
 //**********************************************************************
 
 class Vector {
-private:
-    double mag;
-    double angle;
 public:
+    double x;
+    double y;
+
     double getMag(void);
     double getAngle(void);
-    Vector (void) {mag = 0; angle = 0; }; 
-    Vector (double inMag, double inAngle) { mag = inMag; angle = inAngle; }; 
-    Vector subVectors(Vector* x, Vector y); 
-    Vector addVectors(Vector* x, Vector y);
-    Vector operator+(Vector x);
-    Vector operator-(Vector x);
-    bool operator<=(Vector x);
-    bool operator>=(Vector x);
-    void operator=(Vector x);
+    Vector(void) {x = 0; y = 0; }
 };
 
+Vector cart(double x, double y);
+    
+Vector subVectors(Vector &x, Vector &y); 
+Vector addVectors(Vector &x, Vector &y);
 
-Vector ptam_heading(void);
+double distance(Vector &x, Vector &y);
+
+
+double ptam_heading(void);
 Vector ptam_location(void);
 Vector getDiskVector(int);
 void InitCall(void);
 void avoidObs(void);
 bool diskPickUp(void);
 
+
+
+struct Target {
+    enum {
+        END_OF_GAME,
+        DELRIN,
+        NO_DELRIN,
+    } type;
+
+    Vector dest;
+};
+
+Target get_target(Vector &location, double &rotation);
